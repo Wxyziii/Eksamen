@@ -1,0 +1,27 @@
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+/data/*.db
+
+# Dependencies / build
+node_modules/
+dist/
+build/
+coverage/
+playwright-report/
+test-results/
+
+# Logs
+*.log
+logs/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/settings.json

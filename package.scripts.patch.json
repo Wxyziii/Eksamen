@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "dev": "node server.js",
+    "build": "echo \"No build step configured yet\"",
+    "lint": "echo \"No linter configured yet\"",
+    "test:api": "node scripts/api-smoke-test.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "seed": "node scripts/seed-demo-data.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "latest"
+  }
+}

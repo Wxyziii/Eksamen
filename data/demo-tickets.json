@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Printeren på lærerværelset skriver ikke ut",
+    "description": "Ansatte får feilmelding når de prøver å skrive ut til printeren ved lærerværelset. Køen stopper og dokumenter blir stående fast.",
+    "status": "Åpen",
+    "priority": "Normal",
+    "category": "Hardware",
+    "queue": "IT-støtte",
+    "requester": "Kari Nordmann",
+    "assigned_to": "Ikke tildelt"
+  },
+  {
+    "title": "Passord må nullstilles for elevkonto",
+    "description": "Bruker kommer ikke inn i Microsoft 365 og får beskjed om feil passord. Trenger passordreset og kontroll av MFA-status.",
+    "status": "Under arbeid",
+    "priority": "Høy",
+    "category": "Tilgang",
+    "queue": "Brukerstøtte",
+    "requester": "Ola Hansen",
+    "assigned_to": "Marcel"
+  },
+  {
+    "title": "Wi-Fi faller ut i klasserom 204",
+    "description": "Flere elever mister nettverk samtidig. Problemet skjer spesielt når mange er tilkoblet. Mulig feil med aksesspunkt eller DHCP.",
+    "status": "Åpen",
+    "priority": "Høy",
+    "category": "Nettverk",
+    "queue": "Nettverk",
+    "requester": "Anne Lærer",
+    "assigned_to": "Ikke tildelt"
+  },
+  {
+    "title": "Programvareinstallasjon: Visual Studio Code",
+    "description": "Utviklingsklassen trenger Visual Studio Code installert på flere klientmaskiner før neste prosjektøkt.",
+    "status": "Løst",
+    "priority": "Lav",
+    "category": "Software",
+    "queue": "Klientdrift",
+    "requester": "Per Utvikler",
+    "assigned_to": "Marcel",
+    "solution": "VS Code ble installert og testet på klientmaskinene."
+  },
+  {
+    "title": "Kritisk nettverksbrudd i administrasjonen",
+    "description": "Administrasjonen har mistet tilgang til interne systemer og internett. Flere brukere er påvirket. Må feilsøkes umiddelbart.",
+    "status": "Åpen",
+    "priority": "Kritisk",
+    "category": "Nettverk",
+    "queue": "Nettverk",
+    "requester": "Rektor",
+    "assigned_to": "Ikke tildelt"
+  },
+  {
+    "title": "PC starter tregt etter oppdatering",
+    "description": "Klient-PC bruker over 5 minutter på å starte etter siste Windows-oppdatering. Bruker opplever treg innlogging.",
+    "status": "Under arbeid",
+    "priority": "Normal",
+    "category": "Hardware",
+    "queue": "Klientdrift",
+    "requester": "Mona Berg",
+    "assigned_to": "IT-avdeling"
+  },
+  {
+    "title": "Feil tilgang til delt mappe",
+    "description": "Ansatt får ikke åpnet delt mappe for avdelingen. Trenger kontroll av gruppe/permissions i AD eller filserver.",
+    "status": "Åpen",
+    "priority": "Normal",
+    "category": "Tilgang",
+    "queue": "Brukerstøtte",
+    "requester": "Lise Vik",
+    "assigned_to": "Ikke tildelt"
+  }
+]
