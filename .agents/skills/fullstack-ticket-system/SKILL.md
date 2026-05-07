@@ -80,33 +80,35 @@ db.run(
 
 ---
 
-## Frontend-design — profesjonelt firmasystem
+## Frontend-design — profesjonelt mørkt firmasystem
 
-Systemet skal se ut som et ekte bedriftsverktøy, ikke et skoleprosjekt. Bruk dette designsystemet konsekvent.
+Systemet skal se ut som et ekte bedriftsverktøy, ikke et skoleprosjekt. Bruk mørkt tema som standard. Majoriteten av nettsiden skal være mørk: body, sidebar, toppfelt, kort, tabeller, skjema og detaljpanel. Lyse flater skal bare brukes som små kontrastfelt hvis det hjelper lesbarhet.
 
 ### Fargepalett og CSS-variabler
 
 ```css
 :root {
-  --brand-dark: #1a1a2e;        /* Primærfarge: sidebar, knapper */
-  --brand-mid: #2d2d4e;         /* Hover-tilstand */
-  --surface: #ffffff;
-  --surface-secondary: #f8f8f9;
-  --surface-tertiary: #f1f1f3;
-  --border: rgba(0,0,0,0.08);
-  --text-primary: #111111;
-  --text-secondary: #6b7280;
-  --text-tertiary: #9ca3af;
+  --app-bg: #080b12;            /* Hovedbakgrunn */
+  --brand-dark: #0f172a;        /* Sidebar, paneler, knapper */
+  --brand-mid: #1e293b;         /* Hover-tilstand */
+  --surface: #111827;
+  --surface-secondary: #0b1220;
+  --surface-tertiary: #1f2937;
+  --border: rgba(255,255,255,0.10);
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --accent: #38bdf8;
 
   /* Status-farger */
-  --open-bg: #e8f4fd;       --open-text: #1565c0;
-  --working-bg: #fff8e1;    --working-text: #b55900;
-  --solved-bg: #e8f5e9;     --solved-text: #2e7d32;
+  --open-bg: rgba(56,189,248,0.16);      --open-text: #7dd3fc;
+  --working-bg: rgba(251,191,36,0.16);   --working-text: #facc15;
+  --solved-bg: rgba(34,197,94,0.16);     --solved-text: #86efac;
 
   /* Prioritet-farger */
-  --critical-bg: #fce4ec;   --critical-text: #880e4f;
-  --high-bg: #fbe9e7;       --high-text: #bf360c;
-  --normal-bg: #e3f2fd;     --normal-text: #0d47a1;
+  --critical-bg: rgba(244,63,94,0.18);   --critical-text: #fda4af;
+  --high-bg: rgba(249,115,22,0.18);      --high-text: #fdba74;
+  --normal-bg: rgba(59,130,246,0.16);    --normal-text: #93c5fd;
 }
 ```
 
@@ -129,18 +131,58 @@ Systemet skal se ut som et ekte bedriftsverktøy, ikke et skoleprosjekt. Bruk de
 ```css
 .sidebar {
   width: 220px;
-  background: var(--surface);
+  background: var(--brand-dark);
   border-right: 0.5px solid var(--border);
 }
 .nav-item.active {
-  background: var(--brand-dark);
-  color: #ffffff;
+  background: var(--accent);
+  color: #06111f;
+}
+```
+
+**Mørk tema-regler:**
+- `body` skal bruke `background: var(--app-bg)` eller `var(--surface-secondary)`.
+- Kort, tabell, skjema og detaljpanel skal bruke `var(--surface)`.
+- Inputs og filterfelt skal bruke mørk bakgrunn og lys tekst.
+- Unngå store hvite områder. Maks små badges, varsler eller fokuselementer kan være lyse.
+- Sørg for god kontrast på tekst, borders og hover-tilstander.
+
+```css
+body {
+  background: var(--app-bg);
+  color: var(--text-primary);
+}
+.card,
+.detail-panel,
+table {
+  background: var(--surface);
+  color: var(--text-primary);
+}
+input,
+select,
+textarea {
+  background: var(--surface-tertiary);
+  color: var(--text-primary);
+  border: 0.5px solid var(--border);
+}
+```
+
+**Knapper:**
+```css
+.primary-button {
+  background: var(--accent);
+  color: #06111f;
+}
+.ghost-button {
+  background: transparent;
+  color: var(--text-primary);
+  border: 0.5px solid var(--border);
 }
 ```
 
 **Ticket-tabell:**
 - Bruk `border-collapse: collapse` og `0.5px solid var(--border)` mellom rader
-- Rad-hover: `background: var(--surface-secondary)`
+- Rad-hover: `background: var(--surface-tertiary)`
 - Aldri full border rundt celler — bare horisontale linjer mellom rader
 
 **Status-badges:**
@@ -151,7 +193,7 @@ Systemet skal se ut som et ekte bedriftsverktøy, ikke et skoleprosjekt. Bruk de
 
 **Statistikk-kort:**
 - 4 kort i grid øverst: Åpne, Under arbeid, Løst i dag, Snitt responstid
-- Hvit bakgrunn, tynn border, `border-radius: 12px`
+- Mørk bakgrunn, tynn lys border, `border-radius: 12px`
 - Stor tall (24px), liten label over (10px uppercase)
 
 ### Tre sider
