@@ -1,61 +1,102 @@
 ---
 name: exam-project-planner
-description: Plan Norwegian VG2 IT interdisciplinary exam projects that combine development, operations support, and user support.
+description: Plan and structure the VG2 IT interdisciplinary exam project (Utvikling, Driftstøtte, Brukerstøtte). Use this skill when the user asks to plan the project, create a timeline, decide what to build, organize tasks, or figure out what to show the examiner. Also use it when the user seems stuck or unsure where to start.
 ---
 
 # Exam Project Planner
 
-Use this skill when planning or restructuring the exam project.
+This is a **Norwegian VG2 IT tverrfaglig eksamen** project. The solution must connect all three subjects:
 
-The project should be realistic for a small company.
+| Fag | Hva det betyr for prosjektet |
+|---|---|
+| **Utvikling** | Kode: ticket-system webapplikasjon |
+| **Driftstøtte** | Server: Ubuntu, Apache, backup, overvåking |
+| **Brukerstøtte** | Dokumentasjon: brukerveiledning, feilsøking |
 
-Always connect the plan to:
+---
 
-1. Utvikling
-2. Driftstøtte
-3. Brukerstøtte
+## Anbefalt prosjektstruktur
 
-The preferred project is an internal support portal / ticket system for a fictional company.
+### Fase 1 — Planlegging (gjør dette først)
+1. Skriv en kort systembeskrivelse (hva er bedriften, hva er problemet IT løser)
+2. Lag en enkel kravliste (hva MÅ systemet kunne gjøre)
+3. Tegn et enkelt arkitekturdiagram (klient → webserver → database)
+4. Planlegg hvilke fag hvert element dekker
 
-## Planning output
+### Fase 2 — Utvikling
+1. Sett opp prosjektmappe og Git-repo
+2. Lag databaseskjema (tickets-tabell med alle felt)
+3. Bygg backend API (ruter for CRUD på tickets)
+4. Bygg frontend (HTML-sider koblet til API)
+5. Test alle funksjoner manuelt
 
-When planning, produce:
+### Fase 3 — Driftstøtte
+1. Installer Ubuntu Server (VM eller fysisk)
+2. Sett opp LAMP-stack (Apache, MariaDB, PHP/Node)
+3. Konfigurer UFW brannmur
+4. Sett opp BackupPC
+5. Sett opp Icinga-overvåking
+6. Dokumenter alle steg
 
-- Problem description
-- Company scenario
-- Requirements
-- Architecture
-- Folder structure
-- Database design
-- Deployment plan
-- Backup plan
-- Monitoring plan
-- User support documentation plan
-- What to demonstrate live
-- What to explain to the examiner
-- Risks and fallback plan
+### Fase 4 — Brukerstøtte
+1. Skriv brukerveiledning for ansatte
+2. Skriv IT-admin-guide
+3. Skriv feilsøkingsprosedyre
+4. Forbered sensorbeskrivelse (hva du kan vise live)
 
-## Exam focus
+---
 
-Always explain:
+## Hva du KAN vise sensor live
 
-- Why the solution is useful for a company
-- How the solution connects development and IT operations
-- How the solution supports users
-- What parts can be demonstrated in 10-15 minutes
-- What parts can be explained if live demo fails
+Prioriter disse punktene — de gir best inntrykk:
 
-## Technical preference
+**Utvikling:**
+- Opprette et ticket i nettleseren
+- Vise ticket-liste med filtrering (status, prioritet)
+- Oppdatere status på et ticket
+- Vise at ugyldig input håndteres (f.eks. tomt felt)
 
-Prefer simple and reliable solutions:
+**Driftstøtte:**
+- `systemctl status apache2` (tjeneste kjører)
+- `ufw status` (brannmur aktiv med riktige porter)
+- Vise Icinga-dashboard (grønn status)
+- Vise BackupPC web-grensesnitt (backup gjennomført)
 
-- Web-based ticket system
-- SQLite or MariaDB
-- Ubuntu Server
-- Apache/LAMP or Node.js
-- BackupPC
-- Icinga
-- Optional Windows Server AD/DNS/DHCP
-- Optional C++ log analyzer
+**Brukerstøtte:**
+- Åpne brukerveiledningen og gå gjennom ett punkt
+- Demonstrere feilsøkingsrutine (f.eks. "hva gjør du hvis nettsiden er nede?")
 
-Avoid unnecessary complexity.
+---
+
+## Fag-kobling for sensorforklaring
+
+For hvert element i løsningen, øv deg på å si:
+> "Dette dekker [fag] fordi [begrunnelse]."
+
+Eksempler:
+- "Ticket-systemet dekker Utvikling fordi jeg har kodet en fullstack webapplikasjon med database."
+- "UFW-oppsett dekker Driftstøtte fordi det sikrer serveren mot uautorisert tilgang."
+- "Brukerveiledningen dekker Brukerstøtte fordi den hjelper ansatte å bruke systemet uten IT-hjelp."
+
+---
+
+## Realistisk tidsbruk
+
+| Aktivitet | Estimert tid |
+|---|---|
+| Planlegging og database-design | 2–3 timer |
+| Backend API | 4–6 timer |
+| Frontend | 3–5 timer |
+| Ubuntu Server + LAMP | 3–4 timer |
+| Backup + Overvåking | 2–3 timer |
+| Dokumentasjon | 3–4 timer |
+| **Totalt** | **17–25 timer** |
+
+---
+
+## Neste steg
+
+Når planen er klar, bruk disse skillsene:
+- `fullstack-ticket-system` → for å starte koding
+- `ubuntu-lamp-deploy` → for serveroppsett
+- `norwegian-exam-documentation` → for dokumentasjon

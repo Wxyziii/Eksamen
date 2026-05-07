@@ -1,232 +1,107 @@
 ---
 name: git-sync-review
-description: Always synchronize with Git before work, avoid overwriting local changes, verify the project, perform a code review, then commit and push safe changes.
+description: Safe Git workflow for the Eksamen exam project. Use this skill BEFORE making any file changes, commits, or pushes in the repository. Always run this skill first when the user asks to "save changes", "commit", "push", "sync", or "update the repo". Also use it when starting a new task to ensure the working tree is clean and up to date.
 ---
 
-# Git Sync Review Skill
+# Git Sync & Review
 
-Use this skill whenever making changes to this repository, fixing bugs, adding features, editing documentation, or refactoring code.
+Run this workflow **before every task** that touches files in the repo.
 
-The goal is to keep the local repository synchronized with GitHub, avoid conflicts, verify changes, review the code, and push completed work safely.
-
-## Mandatory workflow
-
-Before making changes:
-
-1. Inspect repository state:
+## Step 1 — Check state
 
 ```bash
-git status --short
-git branch --show-current
-git remote -v
+git status
+git branch
 git log --oneline -5
 ```
 
-2. Fetch remote changes:
+Report: current branch, any uncommitted changes, last 5 commits.
+
+## Step 2 — Fetch remote
 
 ```bash
-git fetch --all --prune
+git fetch origin
+git status -sb   # shows ahead/behind vs remote
 ```
 
-3. Compare local branch with upstream:
+**Rules:**
+- If local is behind → pull with rebase: `git pull --rebase origin main`
+- If local has uncommitted changes → stash first: `git stash`, then pull, then `git stash pop`
+- If there are merge conflicts → STOP. Report conflicts to user. Never auto-resolve.
+- If local is ahead or equal → safe to continue without pulling.
+
+## Step 3 — Make the change
+
+Do the actual task requested (code, config, docs, etc.).
+
+## Step 4 — Self code review
+
+Before committing, check:
+- [ ] No passwords, API keys, or secrets in any file
+- [ ] No debug `console.log` / print statements left in production code
+- [ ] Input validation present on all user-facing fields
+- [ ] SQL queries use parameterized placeholders, not string concatenation
+- [ ] No unnecessary files (node_modules, .env, build artifacts) staged
+- [ ] File names and folder structure match the project convention
+
+Fix any issues found before continuing.
+
+## Step 5 — Run checks (if available)
 
 ```bash
-git status -sb
-git log --oneline --left-right --graph HEAD...@{u}
+# Node.js projects
+npm test 2>/dev/null || echo "No tests"
+npm run lint 2>/dev/null || echo "No linter"
+
+# PHP projects
+php -l <changed-files>
+
+# C++ tools
+make 2>/dev/null || echo "No Makefile"
 ```
 
-4. If the working tree is clean and the remote branch is ahead, pull safely:
+## Step 6 — Stage and commit
+
+Only stage files relevant to this task:
 
 ```bash
-git pull --rebase
+git add <specific-files>   # NOT git add .
+git status                 # confirm what is staged
+git diff --staged          # final review of diff
 ```
-
-5. If there are local uncommitted changes, do not overwrite them.
-
-Instead:
-
-- Explain that local changes exist.
-- Inspect them with:
-
-```bash
-git diff
-git diff --staged
-```
-
-- Continue only if the changes are clearly part of the current task.
-- Do not run destructive commands such as git reset --hard, git clean -fd, or force push unless the user explicitly asks.
-
-## During work
-
-Make the smallest correct change.
-
-Prefer:
-
-- Clear code
-- Small focused commits
-- Simple implementation
-- No unnecessary dependencies
-- No unrelated formatting changes
-- No generated junk files
-- No secrets or credentials
-
-## Verification before commit
-
-After changes, run the project's relevant checks.
-
-Use commands from:
-
-- AGENTS.md
-- README.md
-- package.json
-- Makefile
-- CMakeLists.txt
-- project documentation
-
-For Node projects, check available scripts:
-
-```bash
-npm run
-```
-
-Common checks:
-
-```bash
-npm install
-npm run lint
-npm run test
-npm run build
-```
-
-For C++ projects, check CMake/build instructions:
-
-```bash
-cmake -S . -B build
-cmake --build build
-ctest --test-dir build
-```
-
-Only run commands that make sense for the repository.
-
-If a command fails:
-
-- Diagnose the failure.
-- Fix it if it is related to the current change.
-- Do not hide failed checks.
-- Do not commit or push unless the remaining failure is clearly unrelated and documented.
-
-## Code review before commit
-
-Before committing, perform a self-review.
-
-Review:
-
-1. Correctness
-2. Bugs
-3. Security
-4. Input validation
-5. Error handling
-6. Database safety
-7. File paths and permissions
-8. Performance issues
-9. Readability
-10. Whether the change matches the exam project goal
-
-Also check the final diff:
-
-```bash
-git diff
-git diff --staged
-```
-
-## Commit rules
-
-Stage only relevant files:
-
-```bash
-git add <relevant-files>
-```
-
-Do not stage:
-
-- .env
-- secrets
-- passwords
-- API keys
-- database files unless intentionally required
-- build folders
-- node_modules
-- .DS_Store
-- temporary files
-- large generated files
 
 Commit message format:
-
-```text
-type: short description
 ```
+<type>: <short description in Norwegian or English>
 
-Allowed types:
-
-- feat
-- fix
-- docs
-- refactor
-- test
-- chore
-- security
-
+Types: feat, fix, docs, refactor, chore, security
 Examples:
-
-```bash
-git commit -m "feat: add ticket status filtering"
-git commit -m "fix: validate ticket priority input"
-git commit -m "docs: add Ubuntu deployment guide"
+  feat: legg til filtrering på prioritet i ticket-oversikten
+  fix: rett SQL injection i søkefeltet
+  docs: oppdater brukerguide for ansatte
 ```
 
-## Push rules
-
-Before pushing:
-
 ```bash
-git status -sb
-git log --oneline -5
+git commit -m "<message>"
 ```
 
-Push only if:
+## Step 7 — Push
 
-- The intended work is complete
-- The working tree is clean
-- Relevant checks passed
-- Code review is complete
-- No secrets are included
-- The branch is correct
-
-Push:
+Only push if all checks passed:
 
 ```bash
-git push
+git push origin main
 ```
 
-If push is rejected because remote changed:
+**Never** use `git push --force` unless user explicitly requests it and explains why.
 
-```bash
-git fetch --all --prune
-git pull --rebase
+## End-of-task report
+
+Always end with:
 ```
-
-Resolve conflicts carefully, rerun checks, then push again.
-
-Never force push unless the user explicitly asks.
-
-## Final response
-
-At the end, always report:
-
-- What changed
-- What files were changed
-- What checks were run
-- Whether code review was performed
-- Whether commit was created
-- Whether push succeeded
-- Any remaining risks or TODOs
+Endrede filer: <list>
+Sjekker kjørt: <list or "ingen tilgjengelig">
+Kode-review: <Godkjent / Problemer funnet: ...>
+Commit-hash: <hash or "ikke committet">
+Push-status: <Vellykket / Ikke pushet / Feil: ...>
+```

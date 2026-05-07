@@ -1,96 +1,218 @@
 ---
 name: fullstack-ticket-system
-description: Build and improve a simple full-stack support ticket system for a small company exam scenario.
+description: Build, modify, or debug the VG2 IT exam ticket system (support portal). Use this skill when the user asks to build the ticket system, add features like filtering or status updates, fix bugs in the web app, create the database schema, or work on anything related to the frontend or backend of the support portal. Also use it when the user asks about Node.js/Express, PHP, SQLite, MariaDB, HTML forms, or the API routes.
 ---
 
 # Fullstack Ticket System
 
-Use this skill when building or modifying the ticket system.
+Bygg et enkelt og eksamensvennlig IT-støtteportal der ansatte kan opprette tickets og IT-avdelingen kan behandle dem.
 
-## Core features
+---
 
-The ticket system should support:
+## Anbefalt teknologivalg
 
-- Create ticket
-- View tickets
-- Filter by status
-- Filter by priority
-- Filter by category
-- Filter by queue
-- Update ticket status
-- Add solution/comment
-- Store tickets in SQLite or MariaDB
-- Simple user interface
-- Simple IT/admin interface
+**Alternativ A — Node.js (anbefalt for Utvikling-karakter)**
+- Backend: Node.js + Express
+- Database: SQLite (enklest) eller MariaDB
+- Frontend: HTML/CSS + Vanilla JS (fetch API)
 
-## Preferred stack
+**Alternativ B — PHP (enklere å sette opp på LAMP)**
+- Backend: PHP med PDO
+- Database: MariaDB
+- Frontend: HTML + PHP-templates
 
-Use one of these simple stacks:
+Velg Alternativ A hvis du vil vise mer kompetanse i Utvikling. Velg B hvis LAMP-serveren er allerede satt opp og du vil spare tid.
 
-Option A:
+---
 
-- Node.js
-- Express
-- SQLite
-- HTML/CSS/JavaScript or React
+## Databaseskjema
 
-Option B:
+```sql
+CREATE TABLE tickets (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    tittel      TEXT NOT NULL,
+    beskrivelse TEXT NOT NULL,
+    status      TEXT NOT NULL DEFAULT 'Åpen'
+                CHECK(status IN ('Åpen','Under arbeid','Løst','Lukket')),
+    prioritet   TEXT NOT NULL DEFAULT 'Normal'
+                CHECK(prioritet IN ('Lav','Normal','Høy','Kritisk')),
+    kategori    TEXT NOT NULL DEFAULT 'Generelt'
+                CHECK(kategori IN ('Hardware','Software','Nettverk','Tilgang','Generelt')),
+    kø          TEXT NOT NULL DEFAULT 'IT-støtte',
+    opprettet   DATETIME DEFAULT CURRENT_TIMESTAMP,
+    oppdatert   DATETIME DEFAULT CURRENT_TIMESTAMP,
+    løsning     TEXT
+);
+```
 
-- Apache
-- PHP
-- MariaDB
-- HTML/CSS/JavaScript
+---
 
-Choose the simplest option for the current project.
+## API-ruter (Node.js/Express)
 
-## Priorities
+```
+GET    /api/tickets          — hent alle tickets (støtter ?status=&prioritet=&kategori=)
+GET    /api/tickets/:id       — hent ett ticket
+POST   /api/tickets          — opprett nytt ticket
+PUT    /api/tickets/:id       — oppdater ticket (status, prioritet, løsning)
+DELETE /api/tickets/:id       — slett ticket (kun admin)
+```
 
-Build in this order:
+### Eksempel: POST /api/tickets
 
-1. Working system
-2. Simple readable code
-3. Easy deployment
-4. Easy exam explanation
-5. Basic security
+Validér alltid input på serveren:
+```javascript
+const { tittel, beskrivelse, prioritet, kategori } = req.body;
 
-## Avoid
+if (!tittel || tittel.trim().length < 3) {
+  return res.status(400).json({ feil: 'Tittel må være minst 3 tegn.' });
+}
+if (!beskrivelse || beskrivelse.trim().length < 10) {
+  return res.status(400).json({ feil: 'Beskrivelse må være minst 10 tegn.' });
+}
 
-Avoid:
+// Bruk parameteriserte spørringer — aldri string-concatenation
+db.run(
+  'INSERT INTO tickets (tittel, beskrivelse, prioritet, kategori) VALUES (?, ?, ?, ?)',
+  [tittel.trim(), beskrivelse.trim(), prioritet, kategori],
+  function(err) { ... }
+);
+```
 
-- Complex authentication unless requested
-- Overengineered architecture
-- Unnecessary dependencies
-- Features that do not help the exam
-- Large rewrites unless necessary
+---
 
-## Security
+## Frontend-design — profesjonelt firmasystem
 
-Always consider:
+Systemet skal se ut som et ekte bedriftsverktøy, ikke et skoleprosjekt. Bruk dette designsystemet konsekvent.
 
-- Input validation
-- SQL injection prevention
-- XSS prevention
-- Safe error messages
-- Database safety
+### Fargepalett og CSS-variabler
 
-## Testing
+```css
+:root {
+  --brand-dark: #1a1a2e;        /* Primærfarge: sidebar, knapper */
+  --brand-mid: #2d2d4e;         /* Hover-tilstand */
+  --surface: #ffffff;
+  --surface-secondary: #f8f8f9;
+  --surface-tertiary: #f1f1f3;
+  --border: rgba(0,0,0,0.08);
+  --text-primary: #111111;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
 
-After changes, explain how to test:
+  /* Status-farger */
+  --open-bg: #e8f4fd;       --open-text: #1565c0;
+  --working-bg: #fff8e1;    --working-text: #b55900;
+  --solved-bg: #e8f5e9;     --solved-text: #2e7d32;
 
-- Start the server
-- Open the app in browser
-- Create a ticket
-- Filter tickets
-- Update ticket status
-- Check database
-- Test invalid input
+  /* Prioritet-farger */
+  --critical-bg: #fce4ec;   --critical-text: #880e4f;
+  --high-bg: #fbe9e7;       --high-text: #bf360c;
+  --normal-bg: #e3f2fd;     --normal-text: #0d47a1;
+}
+```
 
-## Exam explanation
+### Layoutstruktur
 
-Always include:
+```
+┌─────────────────────────────────────────────────┐
+│ Sidebar (220px) │ Hovedinnhold  │ Detaljpanel   │
+│                 │               │ (360px, lukk- │
+│ - Logo          │ - Topbar      │  bar på klikk)│
+│ - Navigasjon    │ - Statistikk  │               │
+│ - Køer          │ - Filtre      │ - Ticket-info │
+│ - Bruker        │ - Ticket-tabell│ - Aktivitet  │
+└─────────────────────────────────────────────────┘
+```
 
-- What the feature does
-- Why it matters for a company
-- How it connects to utvikling
-- How it connects to brukerstøtte
-- What to show the examiner
+### Viktige UI-regler
+
+**Sidebar:**
+```css
+.sidebar {
+  width: 220px;
+  background: var(--surface);
+  border-right: 0.5px solid var(--border);
+}
+.nav-item.active {
+  background: var(--brand-dark);
+  color: #ffffff;
+}
+```
+
+**Ticket-tabell:**
+- Bruk `border-collapse: collapse` og `0.5px solid var(--border)` mellom rader
+- Rad-hover: `background: var(--surface-secondary)`
+- Aldri full border rundt celler — bare horisontale linjer mellom rader
+
+**Status-badges:**
+```css
+.badge { padding: 3px 8px; border-radius: 99px; font-size: 11px; font-weight: 500; }
+.badge::before { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%; margin-right: 5px; }
+```
+
+**Statistikk-kort:**
+- 4 kort i grid øverst: Åpne, Under arbeid, Løst i dag, Snitt responstid
+- Hvit bakgrunn, tynn border, `border-radius: 12px`
+- Stor tall (24px), liten label over (10px uppercase)
+
+### Tre sider
+
+### 1. ansatt.html — Opprett ticket
+- Sentert kort-layout (maks 600px bredde)
+- Tydelig overskrift: "Meld inn IT-problem"
+- Felt: Tittel, Beskrivelse (textarea), Prioritet (select), Kategori (select)
+- Primærknapp med `background: var(--brand-dark)`
+- Suksessmelding med grønn border-left etter innsending
+
+### 2. admin.html — Ticket-oversikt (sidebar-layout)
+- Full sidebar med navigasjon og køer
+- Statistikk-kort øverst (4 kolonner)
+- Filtre: Status, Prioritet, Kategori (dropdowns i rad)
+- Tabell med kolonner: ID, Tittel, Status, Prioritet, Kategori, Tildelt, Tid
+- Klikk på rad → åpner slideout-panel til høyre
+
+### 3. Ticket-detaljpanel (slideout)
+- Seksjoner: Detaljer (grid), Beskrivelse, Aktivitetslogg
+- Aktivitetslogg: avatar-bobler, tidsstempel, tekst
+- Footer-knapper: "Feilsøk" (sekundær) + "Merk løst" (primær mørk)
+
+---
+
+## Mappestruktur
+
+```
+ticket-system/
+├── server.js          (eller index.php)
+├── database.js        (DB-oppsett og -tilkobling)
+├── routes/
+│   └── tickets.js     (alle API-ruter)
+├── public/
+│   ├── ansatt.html
+│   ├── admin.html
+│   ├── detalj.html
+│   ├── style.css
+│   └── app.js         (frontend fetch-kall)
+├── package.json
+└── .gitignore         (husk: node_modules/, *.db)
+```
+
+---
+
+## Manuell testing
+
+Test disse scenariene før eksamen:
+
+1. **Opprett ticket** — fyll inn alt korrekt → skal lykkes
+2. **Tom tittel** → skal gi feilmelding
+3. **Liste med filtrering** → endre filter, sjekk at listen endres
+4. **Oppdater status** → fra "Åpen" til "Under arbeid"
+5. **Legg til løsning** → skriv inn løsning, lagre
+6. **Ugyldig ID** → GET /api/tickets/99999 → skal gi 404
+
+---
+
+## Typiske eksamensspørsmål — forbered svar
+
+- *"Hvorfor bruker du parameteriserte spørringer?"* → Forhindrer SQL-injeksjon
+- *"Hva skjer hvis en bruker sender ugyldig data?"* → Server validerer og returnerer 400-feil
+- *"Hvordan er frontend og backend koblet?"* → fetch() kaller REST API, JSON-respons
+- *"Hvilke HTTP-metoder bruker du og hvorfor?"* → GET=les, POST=opprett, PUT=oppdater, DELETE=slett
