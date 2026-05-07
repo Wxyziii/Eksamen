@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Supportportal</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="topbar">
+        <strong>Nordlys IT Support</strong>
+        <span>Demo for VG2 IT eksamen</span>
+      </nav>
+      <section class="hero-grid">
+        <div>
+          <p class="eyebrow">Intern supportportal</p>
+          <h1>Registrer, prioriter og følg IT-saker.</h1>
+          <p class="lead">
+            Statisk prototype som viser hvordan ansatte kan melde feil, og hvordan IT kan
+            sortere saker etter status, prioritet, kategori og kø.
+          </p>
+        </div>
+        <div class="stats-card">
+          <span>Åpne saker</span>
+          <strong id="openCount">0</strong>
+          <small>Oppdateres i nettleseren</small>
+        </div>
+      </section>
+    </header>
+
+    <main class="layout">
+      <section class="panel">
+        <div class="section-title">
+          <span>Ansatt</span>
+          <h2>Ny supportsak</h2>
+        </div>
+        <form id="ticketForm" class="ticket-form">
+          <label>
+            Navn
+            <input id="name" type="text" placeholder="Ola Nordmann" required />
+          </label>
+          <label>
+            Tittel
+            <input id="title" type="text" placeholder="Printer virker ikke" required />
+          </label>
+          <label>
+            Beskrivelse
+            <textarea id="description" rows="4" placeholder="Forklar problemet kort" required></textarea>
+          </label>
+          <div class="form-row">
+            <label>
+              Prioritet
+              <select id="priority">
+                <option>Høy</option>
+                <option selected>Middels</option>
+                <option>Lav</option>
+              </select>
+            </label>
+            <label>
+              Kategori
+              <select id="category">
+                <option>Maskinvare</option>
+                <option>Programvare</option>
+                <option>Nettverk</option>
+                <option>Brukerkonto</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            Kø
+            <select id="queue">
+              <option>Førstelinje</option>
+              <option>Drift</option>
+              <option>Sikkerhet</option>
+            </select>
+          </label>
+          <button type="submit">Opprett sak</button>
+        </form>
+      </section>
+
+      <section class="panel tickets-panel">
+        <div class="section-title">
+          <span>IT-avdeling</span>
+          <h2>Saksoversikt</h2>
+        </div>
+
+        <div class="filters">
+          <select id="statusFilter" aria-label="Filtrer status">
+            <option value="Alle">Alle statuser</option>
+            <option>Ny</option>
+            <option>Under arbeid</option>
+            <option>Løst</option>
+          </select>
+          <select id="priorityFilter" aria-label="Filtrer prioritet">
+            <option value="Alle">Alle prioriteter</option>
+            <option>Høy</option>
+            <option>Middels</option>
+            <option>Lav</option>
+          </select>
+          <select id="categoryFilter" aria-label="Filtrer kategori">
+            <option value="Alle">Alle kategorier</option>
+            <option>Maskinvare</option>
+            <option>Programvare</option>
+            <option>Nettverk</option>
+            <option>Brukerkonto</option>
+          </select>
+          <select id="queueFilter" aria-label="Filtrer kø">
+            <option value="Alle">Alle køer</option>
+            <option>Førstelinje</option>
+            <option>Drift</option>
+            <option>Sikkerhet</option>
+          </select>
+        </div>
+
+        <div id="ticketList" class="ticket-list"></div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
